@@ -2,7 +2,7 @@
   <div class="recipt-search-bar-area">
       <input class="recipt-search-bar" placeholder="검색어를 입력하세요."/>
       <button class="search-button recipt-button ">
-        <i class="fa fa-search"></i>
+        <i class="fa fa-search fa-lg"></i>
       </button>
   </div>
 </template>
