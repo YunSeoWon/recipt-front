@@ -59,8 +59,8 @@ export default {
 
       axios.post(`${process.env.VUE_APP_API_URL}/members/token`, requestBody)
       .then(res => {
-        CookieUtils.setCookie(CookieKeys.ACCESS_TOKEN, res.accessToken, 30);
-        CookieUtils.setCookie(CookieKeys.REFRESH_TOKEN, res.refreshToken, 60*24*7);
+        CookieUtils.setCookie(CookieKeys.ACCESS_TOKEN, res.data.accessToken, 30);
+        CookieUtils.setCookie(CookieKeys.REFRESH_TOKEN, res.data.refreshToken, 60*24*7);
         window.location.href="/";
       })
       .catch(err => {

@@ -1,30 +1,26 @@
-~``<template lang="html">
+<template lang="html">
   <div class="profile-area">
     <img id="profile-image" v-bind:src="defaultImage"/>
     <div class="profile-info-area">
       <div class="profile-info-top">
-        <span class="profile-info-name">비어원</span>
+        <span class="profile-info-name" v-text="nickname"/>
         <ul class="profile-counting-info fa-ul">
           <li>
-            <i class="fa fa-li fa-users"></i>32.1k
+            <i class="fa fa-li fa-users"/> {{ followerCount }}
           </li>
           <li>
-            <i class="fa fa-li fa-eye"></i>576
+            <i class="fa fa-li fa-eye"/> {{ followingCount }}
           </li>
           <li>
-            <i class="fa fa-li fa-heart"></i>2.1K
+            <i class="fa fa-li fa-heart"/> {{ totalRecipeLikeCount }}
           </li>
           <li>
-            <i class="fa fa-li fa-clipboard"></i>421
+            <i class="fa fa-li fa-clipboard"/> {{ totalRecipePostingCount }}
           </li>
         </ul>
       </div>
       <div class="profile-info-content">
-        <p>
-          그냥 소소하게 이것저것 시도해보고 있습니다.<br/>
-          재밌게 봐주셨으면 팔로우, 포스팅 많이 해주세요!<br/>
-          가성비 오지는 요리 위주로 연구 중입니다~
-        </p>
+        <p v-text="introduction"/>
       </div>
       <div class="profile-info-buttom">
         <img class="profile-cook-thumbnail" v-bind:src="samples[0]"/>
@@ -40,15 +36,50 @@ import defaultProfileImage from '@/assets/default-profile-image.jpg'
 import sample1 from '@/assets/sample1.jpeg'
 import sample2 from '@/assets/sample2.jpeg'
 import sample3 from '@/assets/sample3.jpeg'
+import axios from 'axios'
+
+import CookieKeys from '@/constants/CookieKeys.js'
+import CookieUtils from '@/utils/CookieUtils.js'
 
 export default {
   data() {
     return {
+      nickname: '',
+      introduction: '',
+      followerCount: 0,
+      followingCount: 0,
+      totalRecipeLikeCount: 0,
+      totalRecipePostingCount: 0,
+      profileImageUrl: null,
       defaultImage: defaultProfileImage,
       samples: [
         sample1, sample2, sample3
       ]
     }
+  },
+
+  // life cycle
+
+  created() {
+    const accessToken = CookieUtils.getCookie(CookieKeys.ACCESS_TOKEN);
+
+    if (accessToken == null) {
+      window.location.href = "/";
+      return;
+    }
+
+    axios.get(`${process.env.VUE_APP_API_URL}/members/profiles/me`,
+      {
+        headers: {
+          'reciptAccessToken': accessToken
+        }
+      }
+    ).then(res => {
+      this.nickname = res.data.nickname;
+      this.introduction = res.data.introduction;
+      this.followerCount = res.data.followerCount;
+      this.profileImageUrl = res.data.profileImageUrl;
+    })
   }
 }
 </script>

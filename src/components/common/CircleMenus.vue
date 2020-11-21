@@ -3,17 +3,26 @@
       <button class="circle-button">
         <i class="fa fa-shopping-cart fa-2x"></i>
       </button>
-      <button class="circle-button" v-on:click="goLogin">
+      <button class="circle-button" v-on:click="goLoginOrProfilePage">
         <i class="fa fa-user fa-2x"></i>
       </button>
   </div>
 </template>
 
 <script>
+import CookieKeys from '@/constants/CookieKeys.js'
+import CookieUtils from '@/utils/CookieUtils.js'
+
 export default {
   methods: {
-    goLogin() {
-      window.location.href = "/user/login"
+    goLoginOrProfilePage() {
+      const accessToken = CookieUtils.getCookie(CookieKeys.ACCESS_TOKEN);
+
+      if (accessToken == null) {
+        window.location.href = "/user/login";
+      } else {
+        window.location.href = "/user/profile";
+      }
     }
   }
 }
