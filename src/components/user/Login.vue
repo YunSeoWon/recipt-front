@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import ReciptApi from '@/http/ReciptApi.js'
 
 import CookieKeys from '@/constants/CookieKeys.js'
 import CookieUtils from '@/utils/CookieUtils.js'
@@ -44,14 +44,13 @@ export default {
         password: this.password
       };
 
-      axios.post(`${process.env.VUE_APP_API_URL}/members/token`, requestBody)
+      ReciptApi.post(`${process.env.VUE_APP_API_URL}/members/token`, requestBody)
       .then(res => {
         CookieUtils.setCookie(CookieKeys.ACCESS_TOKEN, res.data.accessToken, 30);
         CookieUtils.setCookie(CookieKeys.REFRESH_TOKEN, res.data.refreshToken, 60*24*7);
         window.location.href="/";
       })
       .catch(err => {
-        console.log(err);
         alert("존재하지 않은 이메일이거나 비밀번호가 일치하지 않습니다.")
       })
     }

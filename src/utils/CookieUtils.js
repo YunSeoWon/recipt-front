@@ -20,6 +20,7 @@ CookieUtils.getCookie = function(key) {
             return true;    // break;
         }
     });
+
     return result;
 }
 

@@ -52,7 +52,7 @@ import defaultProfileImage from '@/assets/default-profile-image.jpg'
 import sample1 from '@/assets/sample1.jpeg'
 import sample2 from '@/assets/sample2.jpeg'
 import sample3 from '@/assets/sample3.jpeg'
-import axios from 'axios'
+import ReciptApi from '@/http/ReciptApi.js'
 
 import CookieKeys from '@/constants/CookieKeys.js'
 import CookieUtils from '@/utils/CookieUtils.js'
@@ -90,7 +90,7 @@ export default {
       return;
     }
 
-    axios.get(`${process.env.VUE_APP_API_URL}/members/profiles/me`,
+    ReciptApi.get('/members/profiles/me',
       {
         headers: {
           'reciptAccessToken': accessToken
@@ -141,11 +141,9 @@ export default {
 
     saveRequest() {
       const accessToken = CookieUtils.getCookie(CookieKeys.ACCESS_TOKEN);
-      console.log(accessToken);
-      console.log(this.introduction);
 
       // TODO: 대표 레시피 사진 추가 필요.
-      axios.put(`${process.env.VUE_APP_API_URL}/members/profiles/me`,
+      ReciptApi.put(`${process.env.VUE_APP_API_URL}/members/profiles/me`,
         {
           nickname: this.nickname,
           introduction: this.introduction,

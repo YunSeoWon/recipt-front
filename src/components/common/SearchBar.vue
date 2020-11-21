@@ -1,4 +1,4 @@
-<template lang="html">
+``<template lang="html">
   <div class="recipt-search-bar-area">
       <input class="recipt-search-bar" placeholder="검색어를 입력하세요."/>
       <button class="search-button recipt-button ">

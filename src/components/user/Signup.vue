@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import ReciptApi from '@/http/ReciptApi.js'
 
 export default {
   data() {
@@ -77,7 +77,7 @@ export default {
         mobileNo: this.mobile
       };
 
-      axios.post(`${process.env.VUE_APP_API_URL}/members`, requestBody)
+      ReciptApi.post(`${process.env.VUE_APP_API_URL}/members`, requestBody)
       .then(res => {
         alert("회원가입을 완료하였습니다.");
         window.location.href="/user/login";
