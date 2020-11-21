@@ -1,11 +1,24 @@
 <template>
   <div>
+    <ReciptHeader/>
+    <MenuBar/>
     <router-view></router-view>
+    <ReciptFooter/>
   </div>
 </template>
 
 <script>
-console.log(process.env)
+import ReciptHeader from '@/components/ReciptHeader.vue'
+import MenuBar from '@/components/MenuBar.vue'
+import ReciptFooter from '@/components/ReciptFooter.vue'
+
+export default {
+  components: {
+    'ReciptHeader': ReciptHeader,
+    'MenuBar': MenuBar,
+    'ReciptFooter': ReciptFooter
+  }
+}
 </script>
 
 <style>

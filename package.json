@@ -11,8 +11,10 @@
   "dependencies": {
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
+    "fa-icons": "^0.2.0",
     "querystring": "^0.2.0",
     "vue": "^3.0.0",
+    "vue-awesome": "^4.1.0",
     "vue-router": "^4.0.0-rc.3"
   },
   "devDependencies": {

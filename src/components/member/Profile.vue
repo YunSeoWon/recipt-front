@@ -1,32 +1,48 @@
 <template lang="html">
   <div class="profile-area">
-    <img id="profile-image" v-bind:src="defaultImage"/>
-    <div class="profile-info-area">
-      <div class="profile-info-top">
-        <span class="profile-info-name" v-text="nickname"/>
-        <ul class="profile-counting-info fa-ul">
-          <li>
-            <i class="fa fa-li fa-users"/> {{ followerCount }}
-          </li>
-          <li>
-            <i class="fa fa-li fa-eye"/> {{ followingCount }}
-          </li>
-          <li>
-            <i class="fa fa-li fa-heart"/> {{ totalRecipeLikeCount }}
-          </li>
-          <li>
-            <i class="fa fa-li fa-clipboard"/> {{ totalRecipePostingCount }}
-          </li>
-        </ul>
+    <div class="profile-content-area">
+      <img id="profile-image" v-bind:src="defaultImage"/>
+      <div class="profile-info-area">
+        <div class="profile-info-top">
+          <input class="profile-info-name edit-input" v-model="nickname" :disabled="!edited"/>
+          <ul class="profile-counting-info fa-ul">
+            <li>
+              <i class="fa fa-li fa-users"/> {{ followerCount }}
+            </li>
+            <li>
+              <i class="fa fa-li fa-eye"/> {{ followingCount }}
+            </li>
+            <li>
+              <i class="fa fa-li fa-heart"/> {{ totalRecipeLikeCount }}
+            </li>
+            <li>
+              <i class="fa fa-li fa-clipboard"/> {{ totalRecipePostingCount }}
+            </li>
+          </ul>
+        </div>
+        <div class="profile-info-content">
+          <textarea class="profile-introduction edit-input" v-model="introduction" :disabled="!edited"/>
+        </div>
+        <div class="profile-info-buttom">
+          <img class="profile-cook-thumbnail" v-bind:src="samples[0]"/>
+          <img class="profile-cook-thumbnail" v-bind:src="samples[1]"/>
+          <img class="profile-cook-thumbnail" v-bind:src="samples[2]"/>
+        </div>
       </div>
-      <div class="profile-info-content">
-        <p v-text="introduction"/>
-      </div>
-      <div class="profile-info-buttom">
-        <img class="profile-cook-thumbnail" v-bind:src="samples[0]"/>
-        <img class="profile-cook-thumbnail" v-bind:src="samples[1]"/>
-        <img class="profile-cook-thumbnail" v-bind:src="samples[2]"/>
-      </div>
+    </div>
+    <div class="profile-menu-area">
+      <button class="profile-button" v-if="!edited" v-on:click="enableEdit()">
+        <i class="fa fa-edit fa-3x"/>
+      </button>
+      <button class="profile-button" v-if="edited" v-on:click="reset()">
+        <i class="fa fa-undo fa-3x"/>
+      </button>
+      <button class="profile-button" v-if="edited" v-on:click="cancel()">
+        <i class="fa fa-window-close fa-3x"/>
+      </button>
+      <button class="profile-button" v-if="edited" v-on:click="save()">
+        <i class="fa fa-save fa-3x"/>
+      </button>
     </div>
   </div>
 </template>
@@ -44,17 +60,23 @@ import CookieUtils from '@/utils/CookieUtils.js'
 export default {
   data() {
     return {
+      defaultImage: defaultProfileImage,
+
       nickname: '',
       introduction: '',
+      profileImageUrl: null,
+      samples: [
+        sample1, sample2, sample3
+      ],
+
       followerCount: 0,
       followingCount: 0,
       totalRecipeLikeCount: 0,
       totalRecipePostingCount: 0,
-      profileImageUrl: null,
-      defaultImage: defaultProfileImage,
-      samples: [
-        sample1, sample2, sample3
-      ]
+
+      edited: false,
+
+      initial: null
     }
   },
 
@@ -80,6 +102,72 @@ export default {
       this.followerCount = res.data.followerCount;
       this.profileImageUrl = res.data.profileImageUrl;
     })
+  },
+
+  methods: {
+    saveInitial() {
+      this.initial = {
+          nickname: this.nickname,
+          introduction: this.introduction,
+          profileImageUrl: this.profileImageUrl,
+          samples: this.samples
+      }
+    },
+
+    enableEdit() {
+      this.edited = true;
+      this.saveInitial();
+    },
+
+    reset() {
+      this.nickname = this.initial.nickname;
+      this.introduction = this.initial.introduction;
+      this.profileImageUrl = this.initial.profileImageUrl;
+      this.samples = this.initial.samples;
+    },
+
+    cancel() {
+      if (confirm("프로필 변경을 취소하시겠습니까?")) {
+        this.reset();
+        this.edited = false;
+      }
+    },
+
+    save() {
+      if (confirm("프로필을 변경하시겠습니까?")) {
+        this.saveRequest();
+      }
+    },
+
+    saveRequest() {
+      const accessToken = CookieUtils.getCookie(CookieKeys.ACCESS_TOKEN);
+      console.log(accessToken);
+      console.log(this.introduction);
+
+      // TODO: 대표 레시피 사진 추가 필요.
+      axios.put(`${process.env.VUE_APP_API_URL}/members/profiles/me`,
+        {
+          nickname: this.nickname,
+          introduction: this.introduction,
+          profileImageUrl: this.profileImageUrl
+        },
+        {
+          headers: {
+            'reciptAccessToken': accessToken
+          }
+        }
+      ).then(res => {
+        this.edited = false;
+      })
+    }
+  },
+  watch: {
+    introduction(val) {
+      if (val.split('\n').length >= 5) {
+        alert("소개글은 최대 4줄까지 작성 가능합니다.");
+        this.introduction = val.substr(0, val.length - 1);
+      }
+    }
   }
 }
 </script>
@@ -87,13 +175,35 @@ export default {
 <style lang="css" scoped>
 .profile-area {
   max-width: 800px;
-  height: 300px;
+  height: 350px;
   margin: 10px 0px 10px 0px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.profile-content-area {
+  height: 300px;
   background-color: #000;
 
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+}
+
+.profile-menu-area {
+  height: 50px;
+  background-color: #eee;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 0px 10px 0px 10px;
+}
+
+.profile-menu-area > button {
+  margin-left: 10px;
 }
 
 #profile-image {
@@ -150,5 +260,25 @@ export default {
   margin: 0px 15px 0px 15px;
   width: 120px;
   height: auto;
+}
+.edit-input {
+  text-align: left;
+  font-size: 30px;
+  background-color: rgba( 255, 255, 255, 0 );
+  border-color: rgba( 255, 255, 255, 0 );
+  color: #fff
+}
+.edit-input:focus {
+  outline: none;
+}
+.profile-introduction {
+  resize: none;
+  margin: 0px;
+  padding: 5px;
+  height: 100%;
+  font-size: 16px;
+}
+.profile-button {
+  border: 0px;
 }
 </style>

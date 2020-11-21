@@ -1,41 +1,28 @@
 <template>
-  <div>
-    <ReciptHeader/>
-    <MenuBar/>
-    <main>
-      <div class="login-area">
-        <h1 class="login-title">로그인</h1>
-        <form class="login-form" method="post" @submit.prevent="requestLogin">
-          <input class="recipt-input login-input" v-model="email" placeholder="이메일"/>
-          <input class="recipt-input login-input" v-model="password" placeholder="비밀번호" type="password"/>
-          <input class="recipt-login-button recipt-button" type="submit" value="로그인"/>
-        </form>
+  <main>
+    <div class="login-area">
+      <h1 class="login-title">로그인</h1>
+      <form class="login-form" method="post" @submit.prevent="requestLogin">
+        <input class="recipt-input login-input" v-model="email" placeholder="이메일"/>
+        <input class="recipt-input login-input" v-model="password" placeholder="비밀번호" type="password"/>
+        <input class="recipt-login-button recipt-button" type="submit" value="로그인"/>
+      </form>
 
-        <div class="other-service-area">
-          <button class="recipt-button" v-on:click="goSignup">회원가입</button>
-          <button class="recipt-button">아이디/비밀번호 찾기</button>
-        </div>
+      <div class="other-service-area">
+        <button class="recipt-button" v-on:click="goSignup">회원가입</button>
+        <button class="recipt-button">아이디/비밀번호 찾기</button>
       </div>
-    </main>
-    <ReciptFooter/>
-  </div>
+    </div>
+  </main>
 </template>
 
 <script>
-import ReciptHeader from '../ReciptHeader.vue'
-import MenuBar from '../MenuBar.vue'
-import ReciptFooter from '../ReciptFooter.vue'
 import axios from 'axios'
 
 import CookieKeys from '@/constants/CookieKeys.js'
 import CookieUtils from '@/utils/CookieUtils.js'
 
 export default {
-  components: {
-    'ReciptHeader': ReciptHeader,
-    'MenuBar': MenuBar,
-    'ReciptFooter': ReciptFooter
-  },
   data() {
     return {
       email: '',

@@ -1,46 +1,33 @@
 <template>
-  <div>
-    <ReciptHeader/>
-    <MenuBar/>
-    <main>
-      <div class="signup-area">
-        <h1 class="signup-title">회원가입</h1>
-        <form class="signup-form" method="post" @submit.prevent="requestSignUp">
-          <input class="recipt-input signup-input" placeholder="이메일" v-model="email"/>
-          <span class="input-warning-message" v-show="checks.email==false">이메일 형식으로 작성해주세요.</span>
-          <span class="input-correct-message" v-show="checks.email==true">이메일 형식이 올바릅니다.</span>
-          <input class="recipt-input signup-input" placeholder="비밀번호" v-model="password" type="password"/>
-          <span class="input-warning-message" v-show="checks.password==false">비밀번호는 8~15자로 최소 하나 이상의 영문자, 숫자와 특수문자가 필요합니다.</span>
-          <span class="input-correct-message" v-show="checks.password==true">패스워드 형식이 올바릅니다.</span>
-          <input class="recipt-input signup-input" placeholder="비밀번호 확인" v-model="passwordCheck" type="password"/>
-          <span class="input-warning-message" v-show="checks.passwordCheck==false">입력하신 비밀번호와 일치하지 않습니다.</span>
-          <span class="input-correct-message" v-show="checks.passwordCheck==true">입력하신 비밀번호와 일치합니다.</span>
-          <input class="recipt-input signup-input" placeholder="닉네임" v-model="nickname"/>
-          <span class="input-warning-message" v-show="checks.nickname==false">닉네임은 최소 1자에서 최대 6자까지 가능합니다.</span>
-          <span class="input-correct-message" v-show="checks.nickname==true">닉네임을 올바르게 입력하였습니다.</span>
-          <input class="recipt-input signup-input" placeholder="휴대전화 번호" v-model="mobile"/>
-          <span class="input-warning-message" v-show="checks.mobile==false">휴대전화 번호 양식이 올바르지 않습니다. (ex.010-1234-5678)</span>
-          <span class="input-correct-message" v-show="checks.mobile==true">휴대전화 번호를 올바르게 입력하였습니다.</span>
-          <input class="recipt-signup-button recipt-button" type="submit" value="가입하기"/>
-        </form>
-      </div>
-    </main>
-    <ReciptFooter/>
-  </div>
+  <main>
+    <div class="signup-area">
+      <h1 class="signup-title">회원가입</h1>
+      <form class="signup-form" method="post" @submit.prevent="requestSignUp">
+        <input class="recipt-input signup-input" placeholder="이메일" v-model="email"/>
+        <span class="input-warning-message" v-show="checks.email==false">이메일 형식으로 작성해주세요.</span>
+        <span class="input-correct-message" v-show="checks.email==true">이메일 형식이 올바릅니다.</span>
+        <input class="recipt-input signup-input" placeholder="비밀번호" v-model="password" type="password"/>
+        <span class="input-warning-message" v-show="checks.password==false">비밀번호는 8~15자로 최소 하나 이상의 영문자, 숫자와 특수문자가 필요합니다.</span>
+        <span class="input-correct-message" v-show="checks.password==true">패스워드 형식이 올바릅니다.</span>
+        <input class="recipt-input signup-input" placeholder="비밀번호 확인" v-model="passwordCheck" type="password"/>
+        <span class="input-warning-message" v-show="checks.passwordCheck==false">입력하신 비밀번호와 일치하지 않습니다.</span>
+        <span class="input-correct-message" v-show="checks.passwordCheck==true">입력하신 비밀번호와 일치합니다.</span>
+        <input class="recipt-input signup-input" placeholder="닉네임" v-model="nickname"/>
+        <span class="input-warning-message" v-show="checks.nickname==false">닉네임은 최소 1자에서 최대 6자까지 가능합니다.</span>
+        <span class="input-correct-message" v-show="checks.nickname==true">닉네임을 올바르게 입력하였습니다.</span>
+        <input class="recipt-input signup-input" placeholder="휴대전화 번호" v-model="mobile"/>
+        <span class="input-warning-message" v-show="checks.mobile==false">휴대전화 번호 양식이 올바르지 않습니다. (ex.010-1234-5678)</span>
+        <span class="input-correct-message" v-show="checks.mobile==true">휴대전화 번호를 올바르게 입력하였습니다.</span>
+        <input class="recipt-signup-button recipt-button" type="submit" value="가입하기"/>
+      </form>
+    </div>
+  </main>
 </template>
 
 <script>
-import ReciptHeader from '../ReciptHeader.vue'
-import MenuBar from '../MenuBar.vue'
-import ReciptFooter from '../ReciptFooter.vue'
 import axios from 'axios'
 
 export default {
-  components: {
-    'ReciptHeader': ReciptHeader,
-    'MenuBar': MenuBar,
-    'ReciptFooter': ReciptFooter
-  },
   data() {
     return {
       emailExp: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/,
@@ -90,7 +77,7 @@ export default {
         mobileNo: this.mobile
       };
 
-      axios.post(`${env.process.VUE_APP_API_URL}/members`, requestBody)
+      axios.post(`${process.env.VUE_APP_API_URL}/members`, requestBody)
       .then(res => {
         alert("회원가입을 완료하였습니다.");
         window.location.href="/user/login";
