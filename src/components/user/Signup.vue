@@ -77,14 +77,16 @@ export default {
         mobileNo: this.mobile
       };
 
-      ReciptApi.post(`${process.env.VUE_APP_API_URL}/members`, requestBody)
-      .then(res => {
-        alert("회원가입을 완료하였습니다.");
-        window.location.href="/user/login";
-      })
-      .catch(err => {
-        alert("회원가입 실패하였습니다. 다시 한 번 시도해주십시오.")
-      })
+      let api = new ReciptApi();
+
+      api.signUp(requestBody)
+        .then(res => {
+          alert("회원가입을 완료하였습니다.");
+          window.location.href="/user/login";
+        })
+        .catch(err => {
+          alert("회원가입 실패하였습니다. 다시 한 번 시도해주십시오.")
+        })
     }
   }
 }

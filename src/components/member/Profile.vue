@@ -54,8 +54,7 @@ import sample2 from '@/assets/sample2.jpeg'
 import sample3 from '@/assets/sample3.jpeg'
 import ReciptApi from '@/http/ReciptApi.js'
 
-import CookieKeys from '@/constants/CookieKeys.js'
-import CookieUtils from '@/utils/CookieUtils.js'
+import LoginUtils from '@/utils/LoginUtils.js'
 
 export default {
   data() {
@@ -83,25 +82,16 @@ export default {
   // life cycle
 
   created() {
-    const accessToken = CookieUtils.getCookie(CookieKeys.ACCESS_TOKEN);
+    const accessToken = LoginUtils.getToken()
+    let api = new ReciptApi()
 
-    if (accessToken == null) {
-      window.location.href = "/";
-      return;
-    }
-
-    ReciptApi.get('/members/profiles/me',
-      {
-        headers: {
-          'reciptAccessToken': accessToken
-        }
-      }
-    ).then(res => {
-      this.nickname = res.data.nickname;
-      this.introduction = res.data.introduction;
-      this.followerCount = res.data.followerCount;
-      this.profileImageUrl = res.data.profileImageUrl;
-    })
+    api.getMyProfile(accessToken)
+      .then(res => {
+        this.nickname = res.data.nickname;
+        this.introduction = res.data.introduction;
+        this.followerCount = res.data.followerCount;
+        this.profileImageUrl = res.data.profileImageUrl;
+      })
   },
 
   methods: {
@@ -140,23 +130,19 @@ export default {
     },
 
     saveRequest() {
-      const accessToken = CookieUtils.getCookie(CookieKeys.ACCESS_TOKEN);
+      const accessToken = LoginUtils.getToken();
+      let api = new ReciptApi();
+      let requestBody = {
+        nickname: this.nickname,
+        introduction: this.introduction,
+        profileImageUrl: this.profileImageUrl
+      }
 
       // TODO: 대표 레시피 사진 추가 필요.
-      ReciptApi.put(`${process.env.VUE_APP_API_URL}/members/profiles/me`,
-        {
-          nickname: this.nickname,
-          introduction: this.introduction,
-          profileImageUrl: this.profileImageUrl
-        },
-        {
-          headers: {
-            'reciptAccessToken': accessToken
-          }
-        }
-      ).then(res => {
-        this.edited = false;
-      })
+      api.updateMyProfile(requestBody, accessToken)
+        .then(res => {
+          this.edited = false;
+        })
     }
   },
   watch: {
