@@ -18,7 +18,7 @@
 
 <script>
 import ReciptApi from '@/http/ReciptApi.js'
-
+import axios from 'axios'
 import LocalStorageKeys from '@/constants/LocalStorageKeys.js'
 
 export default {
@@ -50,6 +50,8 @@ export default {
           console.log(res);
           localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN, res.data.accessToken)
           localStorage.setItem(LocalStorageKeys.REFRESH_TOKEN, res.data.refreshToken)
+          axios.defaults.headers.common[api.ACCESS_TOKEN] = res.data.accessToken;
+
           window.location.href=document.referrer
         })
         .catch(err => {
